@@ -36,101 +36,7 @@ public class MainActivity extends Activity {
         submit = (Button)findViewById(R.id.submit);
         result1Text = (TextView)findViewById(R.id.result1);
         result2Text= (TextView)findViewById(R.id.result2);
-
-        aText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                a = Double.parseDouble(aText.getText().toString());
-
-
-
-            }
-
-        });
-
-        aText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-
-                if (keyCode == KeyEvent.KEYCODE_DEL) {
-                    aText.setText("");
-                }
-                return false;
-            }
-        });
-
-
-
-        bText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                b = Double.parseDouble(bText.getText().toString());
-
-            }
-        });
-
-        bText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-
-                if (keyCode == KeyEvent.KEYCODE_DEL) {
-                    bText.setText("");
-                }
-                return false;
-            }
-        });
-
-        cText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                c = Double.parseDouble(cText.getText().toString());
-
-            }
-        });
-
-        cText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-
-                if(keyCode == KeyEvent.KEYCODE_DEL){
-                    cText.setText("");
-                }
-                return false;
-            }
-        });
+        
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,31 +44,43 @@ public class MainActivity extends Activity {
 
                 String translation1 = "";
                 String translation2 = "";
-                result1 = (-b + (Math.sqrt((b*b)-4*a*c)))/2*a;
-                result2 = (-b - (Math.sqrt((b*b)-4*a*c)))/2*a;
+                a = Double.parseDouble(aText.getText().toString());
+                b = Double.parseDouble(bText.getText().toString());
+                c = Double.parseDouble(cText.getText().toString());
+                result1 = (-b + (Math.sqrt((b * b) - 4 * a * c))) / 2 * a;
+                result2 = (-b - (Math.sqrt((b * b) - 4 * a * c))) / 2 * a;
                 boolean flag1 = Double.isNaN(result1);
                 boolean flag2 = Double.isNaN(result2);
 
-                if(!flag1){
+                if (!flag1) {
                     translation1 = Double.toString(result1);
-                }
-                else {
+                } else {
                     translation1 = "Doesn't exist";
                 }
 
-                if(!flag2){
+                if (!flag2) {
                     translation2 = Double.toString(result2);
-                }
-                else {
+                } else {
                     translation2 = "Doesn't exist";
                 }
 
-
+                String empt = "";
                 result1Text.setText(translation1);
                 result2Text.setText(translation2);
 
+                aText.setText("");
+                bText.setText("");
+                cText.setText("");
+
+
+
+
             }
         });
+
+
+
+
     }
 
     @Override
