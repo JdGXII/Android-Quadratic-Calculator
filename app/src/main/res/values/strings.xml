@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">QuadraticCalculator</string>
+
+    <string name="a">a = </string>
+    <string name="action_settings">Settings</string>
+    <string name="b">b = </string>
+    <string name="c">c = </string>
+    <string name="submit">Solve</string>
+    <string name="x1">X1=</string>
+    <string name="x2">X2=</string>
+    <string name="x1result">1</string>
+    <string name="x2result">2</string>
+    <string name="test">derp</string>
+
+</resources>
