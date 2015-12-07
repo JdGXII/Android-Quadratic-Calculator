@@ -1,9 +1,11 @@
 package company.com.quadraticcalculator;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +22,7 @@ public class MainActivity extends Activity {
     private Button submit;
     private TextView result1Text;
     private TextView result2Text;
+    private static final String PREFS_NAME = "TestData";
 
     private double a; private double b; private double  c;
     private double result1=0; private double result2=0;
@@ -36,6 +39,9 @@ public class MainActivity extends Activity {
         submit = (Button)findViewById(R.id.submit);
         result1Text = (TextView)findViewById(R.id.result1);
         result2Text= (TextView)findViewById(R.id.result2);
+        getQuotientPreferences();
+
+
         
 
         submit.setOnClickListener(new View.OnClickListener() {
@@ -47,8 +53,8 @@ public class MainActivity extends Activity {
                 a = Double.parseDouble(aText.getText().toString());
                 b = Double.parseDouble(bText.getText().toString());
                 c = Double.parseDouble(cText.getText().toString());
-                result1 = (-b + (Math.sqrt((b * b) - 4 * a * c))) / 2 * a;
-                result2 = (-b - (Math.sqrt((b * b) - 4 * a * c))) / 2 * a;
+                result1 = (-b + (Math.sqrt((b * b) - (4 * a * c)))) / (2 * a);
+                result2 = (-b - (Math.sqrt((b * b) - (4 * a * c)))) / (2 * a);
                 boolean flag1 = Double.isNaN(result1);
                 boolean flag2 = Double.isNaN(result2);
 
@@ -84,6 +90,16 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    protected void onPause()
+    {
+        super.onPause();
+        Log.i(getClass().getSimpleName(), "onPause");
+
+        // Put questions in SharedPreferences
+        putQuotientPreferences();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -103,5 +119,54 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.i(getClass().getSimpleName(), "onSaveInstanceState");
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.i(getClass().getSimpleName(), "onRestoreInstanceState");
+    }
+
+    private void putQuotientPreferences()
+    {
+        // Get a SharedPreferences file
+        SharedPreferences state = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+
+        // Get a SharedPreferences editor
+        SharedPreferences.Editor editor = state.edit();
+
+
+
+
+
+            editor.putString(getPackageName() + ".aText", aText.getText().toString());
+             editor.putString(getPackageName() + ".bText", bText.getText().toString());
+        editor.putString(getPackageName() + ".cText", cText.getText().toString());
+
+
+        // Commit the editor additions
+        editor.commit();
+    }
+
+    private void getQuotientPreferences()
+    {
+
+
+        // Get SharedPreferences
+        SharedPreferences prefState = getSharedPreferences(PREFS_NAME,
+                MODE_PRIVATE);
+
+
+            aText.setText(prefState.getString(getPackageName()+".aText",""));
+            bText.setText(prefState.getString(getPackageName()+".bText",""));
+            cText.setText(prefState.getString(getPackageName()+".cText",""));
+
+
     }
 }
