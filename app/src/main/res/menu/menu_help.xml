@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="company.com.quadraticcalculator.Help">
+
+    <item
+        android:id="@+id/main_menu"
+        android:title="@string/main_menu" />
+    <item android:id="@+id/menu_preferences"
+        android:title="@string/prefs" />
+
+
+</menu>

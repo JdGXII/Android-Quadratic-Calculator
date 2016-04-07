@@ -11,5 +11,18 @@
     <string name="x1result">1</string>
     <string name="x2result">2</string>
     <string name="test">derp</string>
+    <string name="prefs">Preferences</string>
+    <string name="help">Help</string>
+    <string name="title_activity_help">Help</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="help_intro">Hello, this app solves Quadratic equations.
+    To solve simply input the quotients of your equation and hit solve.</string>
+    <string name="help_contd">After pressing \"Solve\" the solutions for both possible values are displayed. A \"Doesn\'t Exist\" value means that one or more solutions do not exist.</string>
+    <string name="help_contd2">Press the \"Clear\" button to clear the screen and start again.</string>
+    <string name="clear_button">Clear</string>
+    <string name="main_menu">Calculator</string>
+    <string name="title_activity_preference">Preferences</string>
+    <string name="pref_description1">Save quotients from last session?</string>
 
 </resources>

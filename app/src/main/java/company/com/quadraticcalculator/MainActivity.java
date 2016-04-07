@@ -1,6 +1,7 @@
 package company.com.quadraticcalculator;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 public class MainActivity extends Activity {
 
@@ -22,7 +24,10 @@ public class MainActivity extends Activity {
     private Button submit;
     private TextView result1Text;
     private TextView result2Text;
+    private Button clear;
+    private boolean save_preference;
     private static final String PREFS_NAME = "TestData";
+
 
     private double a; private double b; private double  c;
     private double result1=0; private double result2=0;
@@ -32,6 +37,15 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ToggleButton tb;
+        tb = (ToggleButton)findViewById(R.id.sessionDataToggle);
+
+        SharedPreferences prefState = getSharedPreferences(PREFS_NAME,
+                MODE_PRIVATE);
+
+        save_preference =  prefState.getBoolean(getPackageName() + ".isChecked", false);
+
+
 
         aText = (EditText)findViewById(R.id.a);
         bText = (EditText)findViewById(R.id.b);
@@ -39,10 +53,26 @@ public class MainActivity extends Activity {
         submit = (Button)findViewById(R.id.submit);
         result1Text = (TextView)findViewById(R.id.result1);
         result2Text= (TextView)findViewById(R.id.result2);
-        getQuotientPreferences();
+        clear = (Button)findViewById(R.id.clear_button);
 
+        if (save_preference){
 
-        
+            getQuotientPreferences();
+        }
+
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                aText.setText("");
+                bText.setText("");
+                cText.setText("");
+                result2Text.setText("");
+                result1Text.setText("");
+
+            }
+        });
+
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,15 +104,10 @@ public class MainActivity extends Activity {
                 result1Text.setText(translation1);
                 result2Text.setText(translation2);
 
-                aText.setText("");
-                bText.setText("");
-                cText.setText("");
-
-
-
 
             }
         });
+
 
 
 
@@ -96,7 +121,12 @@ public class MainActivity extends Activity {
         Log.i(getClass().getSimpleName(), "onPause");
 
         // Put questions in SharedPreferences
-        putQuotientPreferences();
+        if (save_preference){
+
+            putQuotientPreferences();
+
+        }
+
     }
 
     @Override
@@ -111,14 +141,24 @@ public class MainActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+
+            case R.id.menu_preferences:
+                startActivity(new Intent(getApplicationContext(),
+                        PreferenceActivity.class));
+                return true;
+
+            case R.id.menu_help:
+                startActivity(new Intent(getApplicationContext(),
+                        Help.class));
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
+
     }
 
     @Override
@@ -145,8 +185,8 @@ public class MainActivity extends Activity {
 
 
 
-            editor.putString(getPackageName() + ".aText", aText.getText().toString());
-             editor.putString(getPackageName() + ".bText", bText.getText().toString());
+        editor.putString(getPackageName() + ".aText", aText.getText().toString());
+        editor.putString(getPackageName() + ".bText", bText.getText().toString());
         editor.putString(getPackageName() + ".cText", cText.getText().toString());
 
 
