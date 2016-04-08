@@ -2,6 +2,7 @@ package company.com.quadraticcalculator;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
@@ -22,6 +23,48 @@ public class GraphView extends View {
     private Paint linePaint;
     private Paint textPaint;
     private Paint circlePaint;
+
+
+    // Initialize Paints and dimensions
+    public void Init()
+    {
+        // Set initial line slope and y-intercept
+        setLineSlope(1);
+        setLineYintercept(0);
+
+        // Set initial grid dimension
+        setGridDimension(10);
+
+        // Grid line paint
+        gridPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        gridPaint.setStyle(Paint.Style.STROKE);
+        gridPaint.setStrokeWidth(1);
+        gridPaint.setColor(Color.GRAY);
+
+        // Axis paint
+        axisPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        axisPaint.setStyle(Paint.Style.STROKE);
+        axisPaint.setStrokeWidth(3);
+        axisPaint.setColor(Color.BLACK);
+
+        // Line paint
+        linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        linePaint.setStyle(Paint.Style.STROKE);
+        linePaint.setStrokeWidth(5);
+        linePaint.setColor(Color.BLUE);
+
+        // Text paint
+        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        textPaint.setTextSize(20);
+        textPaint.setStyle(Paint.Style.FILL);
+        textPaint.setStrokeWidth(1);
+        textPaint.setColor(Color.BLACK);
+
+        // Circle paint
+        circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        circlePaint.setStyle(Paint.Style.FILL);
+        circlePaint.setColor(Color.RED);
+    }
 
     public int getGridDimension() {
         return gridDimension;
@@ -49,18 +92,22 @@ public class GraphView extends View {
 
     public GraphView(Context context) {
         super(context);
+        Init();
     }
 
     public GraphView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        Init();
     }
 
     public GraphView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        Init();
     }
 
     public GraphView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        Init();
     }
 
 
