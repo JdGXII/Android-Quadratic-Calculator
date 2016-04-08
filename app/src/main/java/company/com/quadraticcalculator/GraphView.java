@@ -18,6 +18,8 @@ public class GraphView extends View {
     private int lineYintercept;
 
     // Appearance fields
+    //These paints are what we use to 'paint' the grid, axis, the equation line
+    //the circle with the intercept etc...
     private Paint gridPaint;
     private Paint axisPaint;
     private Paint linePaint;
@@ -119,7 +121,72 @@ public class GraphView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        // Background color
+        canvas.drawColor(Color.WHITE);
+
+        // Draw grid lines in x dimension (vertical lines)
+        for (int x = -this.getGridDimension(); x <= this.getGridDimension(); ++x)
+            canvas.drawLine(interpX(x), interpY(this.getGridDimension()),
+                    interpX(x), interpY(-this.getGridDimension()),
+                    (x == 0) ? axisPaint : gridPaint);
+
+        // Draw grid lines in y dimension (horizontal lines)
+        for (int y = -this.getGridDimension(); y <= this.getGridDimension(); ++y)
+            canvas.drawLine(interpX(-this.getGridDimension()), interpY(y),
+                    interpX(this.getGridDimension()), interpY(y),
+                    (y == 0) ? axisPaint : gridPaint);
+
+        // Draw coordinate text
+        int step = this.getGridDimension() / 4;
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        for (int x = -this.getGridDimension() + step; x < this
+                .getGridDimension(); x += step) {
+            if (x != 0)
+                canvas.drawText(Integer.toString(x), interpX(x), interpY(0),
+                        textPaint);
+        }
+        textPaint.setTextAlign(Paint.Align.LEFT);
+        for (int y = -this.getGridDimension() + step; y < this
+                .getGridDimension(); y += step)
+            canvas.drawText(Integer.toString(y), interpX(0), interpY(y),
+                    textPaint);
+
+        // Compute start and end line coordinates
+        double x0 = -this.getGridDimension();
+        double y0 = solveLineEq(x0);
+        double x1 = this.getGridDimension();
+        double y1 = solveLineEq(x1);
+
+        // Draw line
+        canvas.drawLine(interpX(x0), interpY(y0), interpX(x1), interpY(y1),
+                linePaint);
+
+        // Draw y-intercept point
+        double xp = 0.0;
+        double yp = solveLineEq(xp);
+        canvas.drawCircle(interpX(xp), interpY(yp), this.getWidth()
+                * (float) 0.02, circlePaint);
     }
+
+    // Interpolate from graph to Canvas coordinates
+    private float interpX(double x) {
+        double width = (double) this.getWidth();
+        return (float) ((x + this.getGridDimension())
+                / (this.getGridDimension() * 2) * width);
+    }
+
+    private float interpY(double y) {
+        double height = (double) this.getHeight();
+        return (float) ((y + this.getGridDimension())
+                / (this.getGridDimension() * 2) * -height + height);
+    }
+
+    // Line equation result
+    private double solveLineEq(double x) {
+        return (double) lineSlope * x + (double) lineYintercept;
+    }
+    
 
     /**
      * <p>
