@@ -2,6 +2,7 @@ package company.com.quadraticcalculator;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -9,6 +10,42 @@ import android.view.View;
  * Created by jralz_000 on 4/7/2016.
  */
 public class GraphView extends View {
+
+    // Stores graph and line information
+    private int gridDimension;
+    private int lineSlope;
+    private int lineYintercept;
+
+    // Appearance fields
+    private Paint gridPaint;
+    private Paint axisPaint;
+    private Paint linePaint;
+    private Paint textPaint;
+    private Paint circlePaint;
+
+    public int getGridDimension() {
+        return gridDimension;
+    }
+
+    public void setGridDimension(int gridDimension) {
+        this.gridDimension = gridDimension;
+    }
+
+    public int getLineSlope() {
+        return lineSlope;
+    }
+
+    public void setLineSlope(int lineSlope) {
+        this.lineSlope = lineSlope;
+    }
+
+    public int getLineYintercept() {
+        return lineYintercept;
+    }
+
+    public void setLineYintercept(int lineYintercept) {
+        this.lineYintercept = lineYintercept;
+    }
 
     public GraphView(Context context) {
         super(context);
