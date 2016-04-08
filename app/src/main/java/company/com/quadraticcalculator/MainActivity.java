@@ -25,10 +25,11 @@ public class MainActivity extends Activity {
     private TextView result1Text;
     private TextView result2Text;
     private Button clear;
+    private GraphView gView;
     private boolean save_preference;
     private static final String PREFS_NAME = "TestData";
 
-
+    //Stores the quotients input by the user
     private double a; private double b; private double  c;
     private double result1=0; private double result2=0;
 
@@ -54,6 +55,7 @@ public class MainActivity extends Activity {
         result1Text = (TextView)findViewById(R.id.result1);
         result2Text= (TextView)findViewById(R.id.result2);
         clear = (Button)findViewById(R.id.clear_button);
+        gView = (GraphView)findViewById(R.id.graphView);
 
         if (save_preference){
 
@@ -103,6 +105,12 @@ public class MainActivity extends Activity {
                 String empt = "";
                 result1Text.setText(translation1);
                 result2Text.setText(translation2);
+                gView.setA(a);
+                gView.setB(b);
+                gView.setC(c);
+                gView.setResult1(result1);
+                gView.setResult2(result2);
+                gView.invalidate();
 
 
             }

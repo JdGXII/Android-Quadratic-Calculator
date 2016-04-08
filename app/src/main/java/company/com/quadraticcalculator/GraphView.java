@@ -16,6 +16,58 @@ public class GraphView extends View {
     private int gridDimension;
     private int lineSlope;
     private int lineYintercept;
+    private double a;
+    private double b;
+    private double c;
+    private double result1;
+    private double result2;
+
+    public double getResult1() {
+
+        return result1;
+    }
+
+    public void setResult1(double result1) {
+        if(Double.isNaN(result1)){
+            result1 = 0.0;
+        }
+        this.result1 = result1;
+    }
+
+    public double getResult2() {
+        return result2;
+    }
+
+    public void setResult2(double result2) {
+        if(Double.isNaN(result2)){
+            result2 = 0.0;
+        }
+        this.result2 = result2;
+    }
+
+    public double getA() {
+        return a;
+    }
+
+    public void setA(double a) {
+        this.a = a;
+    }
+
+    public double getB() {
+        return b;
+    }
+
+    public void setB(double b) {
+        this.b = b;
+    }
+
+    public double getC() {
+        return c;
+    }
+
+    public void setC(double c) {
+        this.c = c;
+    }
 
     // Appearance fields
     //These paints are what we use to 'paint' the grid, axis, the equation line
@@ -25,6 +77,7 @@ public class GraphView extends View {
     private Paint linePaint;
     private Paint textPaint;
     private Paint circlePaint;
+    private Paint circlePaint2;
 
 
     // Initialize Paints and dimensions
@@ -66,6 +119,11 @@ public class GraphView extends View {
         circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         circlePaint.setStyle(Paint.Style.FILL);
         circlePaint.setColor(Color.RED);
+
+        // Circle2 paint
+        circlePaint2 = new Paint(Paint.ANTI_ALIAS_FLAG);
+        circlePaint2.setStyle(Paint.Style.FILL);
+        circlePaint2.setColor(Color.RED);
     }
 
     public int getGridDimension() {
@@ -163,9 +221,20 @@ public class GraphView extends View {
                 linePaint);
 
         // Draw y-intercept point
-        double xp = 0.0;
+        /*double xp = 0.0;
         double yp = solveLineEq(xp);
         canvas.drawCircle(interpX(xp), interpY(yp), this.getWidth()
+                * (float) 0.02, circlePaint);*/
+        //Draw result1
+        double xp = result1;
+        double yp = solveLineEq(xp);
+        canvas.drawCircle(interpX(xp), interpY(yp), this.getWidth()
+                * (float) 0.02, circlePaint);
+
+        //Draw result2
+        double xp2 = result2;
+        double yp2 = solveLineEq(xp2);
+        canvas.drawCircle(interpX(xp2), interpY(yp2), this.getWidth()
                 * (float) 0.02, circlePaint);
     }
 
@@ -184,9 +253,11 @@ public class GraphView extends View {
 
     // Line equation result
     private double solveLineEq(double x) {
-        return (double) lineSlope * x + (double) lineYintercept;
+       //return (double) lineSlope * x + (double) lineYintercept;
+        return (a*(x*x))+(b*x) + c;
+
     }
-    
+
 
     /**
      * <p>
