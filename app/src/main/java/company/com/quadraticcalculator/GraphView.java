@@ -4,8 +4,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 import android.view.View;
+
+import java.util.ArrayList;
 
 /**
  * Created by jralz_000 on 4/7/2016.
@@ -124,6 +128,9 @@ public class GraphView extends View {
         circlePaint2 = new Paint(Paint.ANTI_ALIAS_FLAG);
         circlePaint2.setStyle(Paint.Style.FILL);
         circlePaint2.setColor(Color.RED);
+
+
+
     }
 
     public int getGridDimension() {
@@ -180,51 +187,50 @@ public class GraphView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        // Background color
-        canvas.drawColor(Color.WHITE);
 
-        // Draw grid lines in x dimension (vertical lines)
-        for (int x = -this.getGridDimension(); x <= this.getGridDimension(); ++x)
-            canvas.drawLine(interpX(x), interpY(this.getGridDimension()),
-                    interpX(x), interpY(-this.getGridDimension()),
-                    (x == 0) ? axisPaint : gridPaint);
+        ArrayList<Path> pathList = new ArrayList<Path>();
 
-        // Draw grid lines in y dimension (horizontal lines)
-        for (int y = -this.getGridDimension(); y <= this.getGridDimension(); ++y)
-            canvas.drawLine(interpX(-this.getGridDimension()), interpY(y),
-                    interpX(this.getGridDimension()), interpY(y),
-                    (y == 0) ? axisPaint : gridPaint);
-
-        // Draw coordinate text
-        int step = this.getGridDimension() / 4;
-        textPaint.setTextAlign(Paint.Align.CENTER);
-        for (int x = -this.getGridDimension() + step; x < this
-                .getGridDimension(); x += step) {
-            if (x != 0)
-                canvas.drawText(Integer.toString(x), interpX(x), interpY(0),
-                        textPaint);
-        }
-        textPaint.setTextAlign(Paint.Align.LEFT);
-        for (int y = -this.getGridDimension() + step; y < this
-                .getGridDimension(); y += step)
-            canvas.drawText(Integer.toString(y), interpX(0), interpY(y),
-                    textPaint);
-
+       this.DrawGrid(canvas);
+       //this.drawParabolaLine(canvas, result1);
+       //this.drawParabolaLine(canvas, result2);
         // Compute start and end line coordinates
-        double x0 = -this.getGridDimension();
+        double vert = -b/(2*a);
+        double x0 = vert;//-this.getGridDimension();
         double y0 = solveLineEq(x0);
-        double x1 = this.getGridDimension();
+        System.out.println((this.getGridDimension()/2));
+        System.out.println((y0));
+        double x1 = result1;//this.getGridDimension();
         double y1 = solveLineEq(x1);
+        //this.setGridDimension(this.getGridDimension()+40);
+        if(y0 < 10){
 
-        // Draw line
-        canvas.drawLine(interpX(x0), interpY(y0), interpX(x1), interpY(y1),
-                linePaint);
+            this.setGridDimension(this.getGridDimension()+6);
+            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+            this.DrawGrid(canvas);
+        }
 
-        // Draw y-intercept point
-        /*double xp = 0.0;
-        double yp = solveLineEq(xp);
-        canvas.drawCircle(interpX(xp), interpY(yp), this.getWidth()
-                * (float) 0.02, circlePaint);*/
+        Path curve = new Path();
+        curve.moveTo(interpX(x0), interpY(y0));
+        curve.quadTo(interpX(x0), interpY(y0), interpX(x1), interpY(y1));
+        pathList.add(curve);
+        //canvas.drawPath(curve, linePaint);
+
+        System.out.println((this.getGridDimension()/2));
+        System.out.println((y0));
+        double x2 = result2;//this.getGridDimension();
+        double y2 = solveLineEq(x2);
+        //this.setGridDimension(this.getGridDimension()+40);
+
+        Path curve2 = new Path();
+        curve.moveTo(interpX(x0), interpY(y0));
+        curve.quadTo(interpX(x0), interpY(y0), interpX(x2), interpY(y2));
+        pathList.add(curve2);
+        //canvas.drawPath(curve2, linePaint);
+
+        for(Path path : pathList){
+
+            canvas.drawPath(path, linePaint);
+        }
         //Draw result1
         double xp = result1;
         double yp = solveLineEq(xp);
@@ -323,5 +329,62 @@ public class GraphView extends View {
     {
         int specSize = MeasureSpec.getSize(heightMeasureSpec);
         return specSize;
+    }
+
+    private void DrawGrid(Canvas canvas){
+
+        // Background color
+        canvas.drawColor(Color.WHITE);
+        // Draw grid lines in x dimension (vertical lines)
+        for (int x = -this.getGridDimension(); x <= this.getGridDimension(); ++x)
+            canvas.drawLine(interpX(x), interpY(this.getGridDimension()),
+                    interpX(x), interpY(-this.getGridDimension()),
+                    (x == 0) ? axisPaint : gridPaint);
+
+        // Draw grid lines in y dimension (horizontal lines)
+        for (int y = -this.getGridDimension(); y <= this.getGridDimension(); ++y)
+            canvas.drawLine(interpX(-this.getGridDimension()), interpY(y),
+                    interpX(this.getGridDimension()), interpY(y),
+                    (y == 0) ? axisPaint : gridPaint);
+
+        // Draw coordinate text
+        int step = this.getGridDimension() / 4;
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        for (int x = -this.getGridDimension() + step; x < this
+                .getGridDimension(); x += step) {
+            if (x != 0)
+                canvas.drawText(Integer.toString(x), interpX(x), interpY(0),
+                        textPaint);
+        }
+        textPaint.setTextAlign(Paint.Align.LEFT);
+        for (int y = -this.getGridDimension() + step; y < this
+                .getGridDimension(); y += step)
+            canvas.drawText(Integer.toString(y), interpX(0), interpY(y),
+                    textPaint);
+
+    }
+
+    private void drawParabolaLine(Canvas canvas, double endpoint){
+
+        // Compute start and end line coordinates
+        double vert = -b/(2*a);
+        double x0 = vert;//-this.getGridDimension();
+        double y0 = solveLineEq(x0);
+        System.out.println((this.getGridDimension()/2));
+        System.out.println((y0));
+        double x1 = endpoint;//this.getGridDimension();
+        double y1 = solveLineEq(x1);
+        //this.setGridDimension(this.getGridDimension()+40);
+        if(y0 < 10){
+
+            this.setGridDimension(this.getGridDimension()+6);
+            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+            this.DrawGrid(canvas);
+        }
+
+        Path curve = new Path();
+        curve.moveTo(interpX(x0), interpY(y0));
+        curve.quadTo(interpX(x0), interpY(y0), interpX(x1), interpY(y1));
+        canvas.drawPath(curve, linePaint);
     }
 }
