@@ -18,6 +18,9 @@ public class GraphView extends View {
 
     // Stores graph and line information
     private int gridDimension;
+    private int gridDimensionX;
+    private int gridDimensionY;
+
     private int lineSlope;
     private int lineYintercept;
     private double a;
@@ -25,6 +28,23 @@ public class GraphView extends View {
     private double c;
     private double result1;
     private double result2;
+
+    public int getGridDimensionX() {
+        return gridDimensionX;
+    }
+
+    public void setGridDimensionX(int gridDimensionX) {
+        this.gridDimensionX = gridDimensionX;
+    }
+
+    public int getGridDimensionY() {
+        return gridDimensionY;
+    }
+
+    public void setGridDimensionY(int gridDimensionY) {
+        this.gridDimensionY = gridDimensionY;
+    }
+
 
     public double getResult1() {
 
@@ -92,7 +112,9 @@ public class GraphView extends View {
         setLineYintercept(0);
 
         // Set initial grid dimension
-        setGridDimension(10);
+        setGridDimension(20);
+        setGridDimensionX(10);
+        setGridDimensionY(10);
 
         // Grid line paint
         gridPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -190,7 +212,7 @@ public class GraphView extends View {
 
         ArrayList<Path> pathList = new ArrayList<Path>();
 
-       this.DrawGrid(canvas);
+       this.drawGrid(canvas);
        //this.drawParabolaLine(canvas, result1);
        //this.drawParabolaLine(canvas, result2);
         // Compute start and end line coordinates
@@ -204,12 +226,6 @@ public class GraphView extends View {
         double xref = (x0+x1/2);
         double yref = (solveLineEq(xref));
         //this.setGridDimension(this.getGridDimension()+40);
-        if(y0 < 10){
-
-            this.setGridDimension(this.getGridDimension()+6);
-            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-            this.DrawGrid(canvas);
-        }
 
         Path curve = new Path();
         curve.moveTo(interpX(x0), interpY(y0));
@@ -229,6 +245,39 @@ public class GraphView extends View {
         curve.moveTo(interpX(x0), interpY(y0));
         curve.quadTo(interpX(xref), interpY(yref), interpX(x2), interpY(y2));
         pathList.add(curve2);
+
+        //Resize grid if necessary
+        //if either the vertex or either solution's y coordinate is smaller than the defaultg grid
+        if(y0 < -10 || y1 < -10 || y2 < -10){
+
+            this.setGridDimensionY(this.getGridDimensionY()+(-(int)y0-this.getGridDimensionY())+1);
+            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+            this.drawGrid(canvas);
+        }
+        else if(y0 > 10 || y1 > 10 || y2 > 10){
+
+            this.setGridDimensionY(this.getGridDimensionY()+((int)y0-this.getGridDimensionY())+1);
+            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+            this.drawGrid(canvas);
+        }
+
+        //if either the vertex x coord, or either final point x coord is smaller than the default gridDimensionX
+        if(x0 < -10 || x1 <-10 ||x2 < -10){
+
+            this.setGridDimensionX(this.getGridDimensionX() + (-(int) x0 - this.getGridDimensionX()) + 1);
+            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+            this.drawGrid(canvas);
+        }
+        else if(x0 > 10 || x1 > 10 || x2 > 10){
+
+            this.setGridDimensionX(this.getGridDimensionX() + ((int) y0 - this.getGridDimensionX()) + 1);
+            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+            this.drawGrid(canvas);
+        }
+
+
+
+
         //canvas.drawPath(curve2, linePaint);
 
         for(Path path : pathList){
@@ -251,14 +300,14 @@ public class GraphView extends View {
     // Interpolate from graph to Canvas coordinates
     private float interpX(double x) {
         double width = (double) this.getWidth();
-        return (float) ((x + this.getGridDimension())
-                / (this.getGridDimension() * 2) * width);
+        return (float) ((x + this.getGridDimensionX())
+                / (this.getGridDimensionX() * 2) * width);
     }
 
     private float interpY(double y) {
         double height = (double) this.getHeight();
-        return (float) ((y + this.getGridDimension())
-                / (this.getGridDimension() * 2) * -height + height);
+        return (float) ((y + this.getGridDimensionY())
+                / (this.getGridDimensionY() * 2) * -height + height);
     }
 
     // Line equation result
@@ -335,36 +384,14 @@ public class GraphView extends View {
         return specSize;
     }
 
-    private void DrawGrid(Canvas canvas){
+    private void drawGrid(Canvas canvas){
 
         // Background color
         canvas.drawColor(Color.WHITE);
-        // Draw grid lines in x dimension (vertical lines)
-        for (int x = -this.getGridDimension(); x <= this.getGridDimension(); ++x)
-            canvas.drawLine(interpX(x), interpY(this.getGridDimension()),
-                    interpX(x), interpY(-this.getGridDimension()),
-                    (x == 0) ? axisPaint : gridPaint);
+        int step = this.getGridDimensionX() / 4;
+        drawVerticalGrid(canvas, step);
+        drawHorizontalGrid(canvas, step);
 
-        // Draw grid lines in y dimension (horizontal lines)
-        for (int y = -this.getGridDimension(); y <= this.getGridDimension(); ++y)
-            canvas.drawLine(interpX(-this.getGridDimension()), interpY(y),
-                    interpX(this.getGridDimension()), interpY(y),
-                    (y == 0) ? axisPaint : gridPaint);
-
-        // Draw coordinate text
-        int step = this.getGridDimension() / 4;
-        textPaint.setTextAlign(Paint.Align.CENTER);
-        for (int x = -this.getGridDimension() + step; x < this
-                .getGridDimension(); x += step) {
-            if (x != 0)
-                canvas.drawText(Integer.toString(x), interpX(x), interpY(0),
-                        textPaint);
-        }
-        textPaint.setTextAlign(Paint.Align.LEFT);
-        for (int y = -this.getGridDimension() + step; y < this
-                .getGridDimension(); y += step)
-            canvas.drawText(Integer.toString(y), interpX(0), interpY(y),
-                    textPaint);
 
     }
 
@@ -374,7 +401,7 @@ public class GraphView extends View {
         double vert = -b/(2*a);
         double x0 = vert;//-this.getGridDimension();
         double y0 = solveLineEq(x0);
-        System.out.println((this.getGridDimension()/2));
+        System.out.println((this.getGridDimension() / 2));
         System.out.println((y0));
         double x1 = endpoint;//this.getGridDimension();
         double y1 = solveLineEq(x1);
@@ -383,12 +410,48 @@ public class GraphView extends View {
 
             this.setGridDimension(this.getGridDimension()+6);
             canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-            this.DrawGrid(canvas);
+            this.drawGrid(canvas);
         }
 
         Path curve = new Path();
         curve.moveTo(interpX(x0), interpY(y0));
         curve.quadTo(interpX(x0), interpY(y0), interpX(x1), interpY(y1));
         canvas.drawPath(curve, linePaint);
+    }
+
+    private void drawVerticalGrid(Canvas canvas, int step){
+
+        // Draw grid lines in x dimension (vertical lines)
+        for (int x = -this.getGridDimensionX(); x <= this.getGridDimensionX(); ++x)
+            canvas.drawLine(interpX(x), interpY(this.getGridDimensionY()),
+                    interpX(x), interpY(-this.getGridDimensionY()),
+                    (x == 0) ? axisPaint : gridPaint);
+
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        for (int x = -this.getGridDimensionX() + step; x < this
+                .getGridDimensionX(); x += step) {
+            if (x != 0)
+                canvas.drawText(Integer.toString(x), interpX(x), interpY(0),
+                        textPaint);
+        }
+    }
+
+    private void drawHorizontalGrid(Canvas canvas, int step){
+
+        // Draw grid lines in y dimension (horizontal lines)
+        for (int y = -this.getGridDimensionY(); y <= this.getGridDimensionY(); ++y)
+            canvas.drawLine(interpX(-this.getGridDimensionX()), interpY(y),
+                    interpX(this.getGridDimensionX()), interpY(y),
+                    (y == 0) ? axisPaint : gridPaint);
+
+        // Draw coordinate text
+
+
+        textPaint.setTextAlign(Paint.Align.LEFT);
+        for (int y = -this.getGridDimensionY() + step; y < this
+                .getGridDimensionY(); y += step)
+            canvas.drawText(Integer.toString(y), interpX(0), interpY(y),
+                    textPaint);
+
     }
 }
