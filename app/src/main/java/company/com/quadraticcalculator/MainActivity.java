@@ -91,16 +91,38 @@ public class MainActivity extends Activity {
                 result2 = (-b - (Math.sqrt((b * b) - (4 * a * c)))) / (2 * a);
                 boolean flag1 = Double.isNaN(result1);
                 boolean flag2 = Double.isNaN(result2);
-
+                String format = "%."+decimal_place+"f";
                 if (!flag1) {
-                    translation1 = Double.toString(result1);
+
+
+                    if(decimal_place.equals("") || decimal_place.equals("Show all")){
+
+                        translation1 = Double.toString(result1);
+
+                    }
+                    else{
+
+
+                        translation1 = String.format(format, result1);
+                    }
+
                 } else {
                     translation1 = "Doesn't exist";
                 }
 
                 if (!flag2) {
-                    translation2 = Double.toString(result2);
-                    //translation2 = String.format("%.2f", result2);
+
+                    if(decimal_place.equals("") || decimal_place.equals("Show all")){
+
+                        translation2 = Double.toString(result2);
+
+                    }
+                    else{
+
+                        translation2 = String.format(format, result2);
+                    }
+
+
                 } else {
                     translation2 = "Doesn't exist";
                 }
