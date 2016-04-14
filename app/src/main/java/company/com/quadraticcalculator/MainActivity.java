@@ -98,6 +98,7 @@ public class MainActivity extends Activity {
 
                 if (!flag2) {
                     translation2 = Double.toString(result2);
+                    //translation2 = String.format("%.2f", result2);
                 } else {
                     translation2 = "Doesn't exist";
                 }
