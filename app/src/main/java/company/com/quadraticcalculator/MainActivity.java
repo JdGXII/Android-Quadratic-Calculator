@@ -27,6 +27,7 @@ public class MainActivity extends Activity {
     private Button clear;
     private GraphView gView;
     private boolean save_preference;
+    private String decimal_place;
     private static final String PREFS_NAME = "TestData";
 
     //Stores the quotients input by the user
@@ -45,6 +46,7 @@ public class MainActivity extends Activity {
                 MODE_PRIVATE);
 
         save_preference =  prefState.getBoolean(getPackageName() + ".isChecked", false);
+        decimal_place = prefState.getString(getPackageName()+".decimalPlaceContent", "");
 
 
 

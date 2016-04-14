@@ -33,6 +33,7 @@ public class PreferenceActivity extends Activity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         decimalsSpinner.setAdapter(adapter);
         getCheckStatus();
+        getDecimalPlace();
 
 
 
@@ -133,6 +134,42 @@ public class PreferenceActivity extends Activity {
 
     }
 
+    private void putDecimalPlace(){
+
+        // Get a SharedPreferences file
+        SharedPreferences state = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+
+        // Get a SharedPreferences editor
+        SharedPreferences.Editor editor = state.edit();
+
+
+
+
+        editor.putInt(getPackageName() + ".decimalPlaceId", (int) decimalsSpinner.getSelectedItemId());
+        editor.putString(getPackageName() + ".decimalPlaceContent", decimalsSpinner.getSelectedItem().toString());
+
+
+
+        // Commit the editor additions
+        editor.commit();
+
+
+    }
+
+    private void getDecimalPlace()
+    {
+
+
+        // Get SharedPreferences
+        SharedPreferences prefState = getSharedPreferences(PREFS_NAME,
+                MODE_PRIVATE);
+
+
+        decimalsSpinner.setSelection(prefState.getInt(getPackageName()+".decimalPlaceId",0));
+
+
+    }
+
     @Override
     protected void onPause()
     {
@@ -141,6 +178,8 @@ public class PreferenceActivity extends Activity {
 
         // Put toggle button check status
 
-            putCheckedStatus();
+        putCheckedStatus();
+        putDecimalPlace();
+
     }
 }
