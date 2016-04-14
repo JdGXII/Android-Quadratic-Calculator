@@ -201,6 +201,8 @@ public class GraphView extends View {
         System.out.println((y0));
         double x1 = result1;//this.getGridDimension();
         double y1 = solveLineEq(x1);
+        double xref = (x0+x1/2);
+        double yref = (solveLineEq(xref));
         //this.setGridDimension(this.getGridDimension()+40);
         if(y0 < 10){
 
@@ -211,7 +213,7 @@ public class GraphView extends View {
 
         Path curve = new Path();
         curve.moveTo(interpX(x0), interpY(y0));
-        curve.quadTo(interpX(x0), interpY(y0), interpX(x1), interpY(y1));
+        curve.quadTo(interpX(xref), interpY(yref), interpX(x1), interpY(y1));
         pathList.add(curve);
         //canvas.drawPath(curve, linePaint);
 
@@ -219,11 +221,13 @@ public class GraphView extends View {
         System.out.println((y0));
         double x2 = result2;//this.getGridDimension();
         double y2 = solveLineEq(x2);
+        xref = (x0+x2)/2;
+        yref = solveLineEq(xref);
         //this.setGridDimension(this.getGridDimension()+40);
 
         Path curve2 = new Path();
         curve.moveTo(interpX(x0), interpY(y0));
-        curve.quadTo(interpX(x0), interpY(y0), interpX(x2), interpY(y2));
+        curve.quadTo(interpX(xref), interpY(yref), interpX(x2), interpY(y2));
         pathList.add(curve2);
         //canvas.drawPath(curve2, linePaint);
 
