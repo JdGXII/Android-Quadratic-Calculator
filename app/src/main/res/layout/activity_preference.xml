@@ -41,6 +41,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/spinner"
         android:layout_alignTop="@+id/textView4"
-        android:layout_toEndOf="@+id/textView4" />
+        android:layout_alignStart="@+id/sessionDataToggle" />
 
 </RelativeLayout>
