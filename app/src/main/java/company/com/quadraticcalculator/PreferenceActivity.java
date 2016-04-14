@@ -7,13 +7,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.ToggleButton;
 
 public class PreferenceActivity extends Activity {
 
     private ToggleButton toggleB;
+    private Spinner decimalsSpinner;
    // private int toggle_flag;
     //private boolean check_status;
     private static final String PREFS_NAME = "TestData";
@@ -24,6 +27,11 @@ public class PreferenceActivity extends Activity {
         setContentView(R.layout.activity_preference);
         toggleB = (ToggleButton)findViewById(R.id.sessionDataToggle);
         //toggle_flag = 0;
+        decimalsSpinner = (Spinner)findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.decimals_array,
+                android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        decimalsSpinner.setAdapter(adapter);
         getCheckStatus();
 
 
