@@ -374,8 +374,6 @@ public class GraphView extends View {
         double vert = -b/(2*a);
         double x0 = vert;//-this.getGridDimension();
         double y0 = solveLineEq(x0);
-        System.out.println((this.getGridDimension()/2));
-        System.out.println((y0));
         double x1 = result1;//this.getGridDimension();
         double y1 = solveLineEq(x1);
         double x2 = result2;//this.getGridDimension();
