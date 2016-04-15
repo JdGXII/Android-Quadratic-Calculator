@@ -210,40 +210,17 @@ public class GraphView extends View {
         super.onDraw(canvas);
 
 
-        ArrayList<Path> pathList = new ArrayList<Path>();
+        //draw grid where Parabola and results are shown
+        this.drawGrid(canvas);
 
-       this.drawGrid(canvas);
-       //this.drawParabolaLine(canvas, result1);
-       //this.drawParabolaLine(canvas, result2);
-        // Compute start and end line coordinates
-        double vert = -b/(2*a);
-        double x0 = vert;//-this.getGridDimension();
-        double y0 = solveLineEq(x0);
-        System.out.println((this.getGridDimension()/2));
-        System.out.println((y0));
-        double x1 = result1;//this.getGridDimension();
-        double y1 = solveLineEq(x1);
-        double x2 = result2;//this.getGridDimension();
-        double y2 = solveLineEq(x2);
-        double xref = 2*x0 - x1/2 -x2/2; //2*anywhereOnCurveX -startX/2 -endX/2;
-        double yref = 2*y0 -y1/2 -y2/2;//(solveLineEq(xref));
-        
-        Path curve = new Path();
-        curve.moveTo(interpX(x2), interpY(y2));
-        curve.quadTo(interpX(xref), interpY(yref),interpX(x1), interpY(y1));
-        canvas.drawPath(curve, linePaint);
+        //Draw parabola
+        this.drawCurve(canvas);
 
-        //Draw result1
-        double xp = result1;
-        double yp = solveLineEq(xp);
-        canvas.drawCircle(interpX(xp), interpY(yp), this.getWidth()
-                * (float) 0.02, circlePaint);
+        //Draw result1S
+        drawResult(canvas, result1);
 
         //Draw result2
-        double xp2 = result2;
-        double yp2 = solveLineEq(xp2);
-        canvas.drawCircle(interpX(xp2), interpY(yp2), this.getWidth()
-                * (float) 0.02, circlePaint);
+        drawResult(canvas, result2);
 
 
     }
@@ -346,30 +323,6 @@ public class GraphView extends View {
 
     }
 
-    private void drawParabolaLine(Canvas canvas, double endpoint){
-
-        // Compute start and end line coordinates
-        double vert = -b/(2*a);
-        double x0 = vert;//-this.getGridDimension();
-        double y0 = solveLineEq(x0);
-        System.out.println((this.getGridDimension() / 2));
-        System.out.println((y0));
-        double x1 = endpoint;//this.getGridDimension();
-        double y1 = solveLineEq(x1);
-        //this.setGridDimension(this.getGridDimension()+40);
-        if(y0 < 10){
-
-            this.setGridDimension(this.getGridDimension()+6);
-            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-            this.drawGrid(canvas);
-        }
-
-        Path curve = new Path();
-        curve.moveTo(interpX(x0), interpY(y0));
-        curve.quadTo(interpX(x0), interpY(y0), interpX(x1), interpY(y1));
-        canvas.drawPath(curve, linePaint);
-    }
-
     private void drawVerticalGrid(Canvas canvas, int step){
 
         // Draw grid lines in x dimension (vertical lines)
@@ -406,19 +359,33 @@ public class GraphView extends View {
 
     }
 
-    //This formula taken from: Rob Spencer's papers found on: http://scaledinnovation.com/analytics/splines/aboutSplines.html
-    private double[] getControlPoint(double x0, double x1, double x2, double y0, double y1, double y2, double t){
+    public void drawResult(Canvas canvas, double result){
 
-        double d01 =Math.sqrt(Math.pow(x1-x0,2)+Math.pow(y1-y0,2));
-        double d12=Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
-        double fa= t*d01/(d01+d12);
-        double fb=t*d12/(d01+d12);
-        double p1x=x1-fa*(x2-x0);    // x2-x0 is the width of triangle T
-        double p1y=y1-fa*(y2-y0);    // y2-y0 is the height of T
-        double p2x=x1+fb*(x2-x0);
-        double p2y=y1+fb*(y2-y0);
+        //Draw result1
+        double xp = result;
+        double yp = solveLineEq(xp);
+        canvas.drawCircle(interpX(xp), interpY(yp), this.getWidth()
+                * (float) 0.02, circlePaint);
+    }
 
-        double[] points_arr = {p1x,p1y,p2x,p2y};
-        return points_arr;
+    public void drawCurve(Canvas canvas){
+
+        // Compute start and end line coordinates
+        double vert = -b/(2*a);
+        double x0 = vert;//-this.getGridDimension();
+        double y0 = solveLineEq(x0);
+        System.out.println((this.getGridDimension()/2));
+        System.out.println((y0));
+        double x1 = result1;//this.getGridDimension();
+        double y1 = solveLineEq(x1);
+        double x2 = result2;//this.getGridDimension();
+        double y2 = solveLineEq(x2);
+        double xref = 2*x0 - x1/2 -x2/2; //Control point: 2*anywhereOnCurveX -startX/2 -endX/2;
+        double yref = 2*y0 -y1/2 -y2/2;  //Same as above but with the Ys
+
+        Path curve = new Path();
+        curve.moveTo(interpX(x2), interpY(y2));
+        curve.quadTo(interpX(xref), interpY(yref),interpX(x1), interpY(y1));
+        canvas.drawPath(curve, linePaint);
     }
 }
