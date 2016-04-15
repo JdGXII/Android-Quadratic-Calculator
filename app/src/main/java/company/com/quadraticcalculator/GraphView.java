@@ -114,7 +114,7 @@ public class GraphView extends View {
         // Set initial grid dimension
         setGridDimension(20);
         setGridDimensionX(10);
-        setGridDimensionY(10);
+        setGridDimensionY(17);
 
         // Grid line paint
         gridPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -223,67 +223,16 @@ public class GraphView extends View {
         System.out.println((y0));
         double x1 = result1;//this.getGridDimension();
         double y1 = solveLineEq(x1);
-        double xref = (x0+x1/2);
-        double yref = (solveLineEq(xref));
-        //this.setGridDimension(this.getGridDimension()+40);
-
-        Path curve = new Path();
-        curve.moveTo(interpX(x0), interpY(y0));
-        curve.quadTo(interpX(xref), interpY(yref), interpX(x1), interpY(y1));
-        pathList.add(curve);
-        //canvas.drawPath(curve, linePaint);
-
-        System.out.println((this.getGridDimension()/2));
-        System.out.println((y0));
         double x2 = result2;//this.getGridDimension();
         double y2 = solveLineEq(x2);
-        xref = (x0+x2)/2;
-        yref = solveLineEq(xref);
-        //this.setGridDimension(this.getGridDimension()+40);
+        double xref = 2*x0 - x1/2 -x2/2; //2*anywhereOnCurveX -startX/2 -endX/2;
+        double yref = 2*y0 -y1/2 -y2/2;//(solveLineEq(xref));
+        
+        Path curve = new Path();
+        curve.moveTo(interpX(x2), interpY(y2));
+        curve.quadTo(interpX(xref), interpY(yref),interpX(x1), interpY(y1));
+        canvas.drawPath(curve, linePaint);
 
-        Path curve2 = new Path();
-        curve.moveTo(interpX(x0), interpY(y0));
-        curve.quadTo(interpX(xref), interpY(yref), interpX(x2), interpY(y2));
-        pathList.add(curve2);
-
-        //Resize grid if necessary
-        //if either the vertex or either solution's y coordinate is smaller than the defaultg grid
-        if(y0 < -10 || y1 < -10 || y2 < -10){
-
-            this.setGridDimensionY(this.getGridDimensionY()+(-(int)y0-this.getGridDimensionY())+1);
-            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-            this.drawGrid(canvas);
-        }
-        else if(y0 > 10 || y1 > 10 || y2 > 10){
-
-            this.setGridDimensionY(this.getGridDimensionY()+((int)y0-this.getGridDimensionY())+1);
-            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-            this.drawGrid(canvas);
-        }
-
-        //if either the vertex x coord, or either final point x coord is smaller than the default gridDimensionX
-        if(x0 < -10 || x1 <-10 ||x2 < -10){
-
-            this.setGridDimensionX(this.getGridDimensionX() + (-(int) x0 - this.getGridDimensionX()) + 1);
-            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-            this.drawGrid(canvas);
-        }
-        else if(x0 > 10 || x1 > 10 || x2 > 10){
-
-            this.setGridDimensionX(this.getGridDimensionX() + ((int) y0 - this.getGridDimensionX()) + 1);
-            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-            this.drawGrid(canvas);
-        }
-
-
-
-
-        //canvas.drawPath(curve2, linePaint);
-
-        for(Path path : pathList){
-
-            canvas.drawPath(path, linePaint);
-        }
         //Draw result1
         double xp = result1;
         double yp = solveLineEq(xp);
@@ -295,6 +244,8 @@ public class GraphView extends View {
         double yp2 = solveLineEq(xp2);
         canvas.drawCircle(interpX(xp2), interpY(yp2), this.getWidth()
                 * (float) 0.02, circlePaint);
+
+
     }
 
     // Interpolate from graph to Canvas coordinates
@@ -453,5 +404,21 @@ public class GraphView extends View {
             canvas.drawText(Integer.toString(y), interpX(0), interpY(y),
                     textPaint);
 
+    }
+
+    //This formula taken from: Rob Spencer's papers found on: http://scaledinnovation.com/analytics/splines/aboutSplines.html
+    private double[] getControlPoint(double x0, double x1, double x2, double y0, double y1, double y2, double t){
+
+        double d01 =Math.sqrt(Math.pow(x1-x0,2)+Math.pow(y1-y0,2));
+        double d12=Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
+        double fa= t*d01/(d01+d12);
+        double fb=t*d12/(d01+d12);
+        double p1x=x1-fa*(x2-x0);    // x2-x0 is the width of triangle T
+        double p1y=y1-fa*(y2-y0);    // y2-y0 is the height of T
+        double p2x=x1+fb*(x2-x0);
+        double p2y=y1+fb*(y2-y0);
+
+        double[] points_arr = {p1x,p1y,p2x,p2y};
+        return points_arr;
     }
 }
