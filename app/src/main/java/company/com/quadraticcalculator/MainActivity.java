@@ -16,10 +16,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import eu.inmite.android.lib.validations.form.annotations.NotEmpty;
+
 public class MainActivity extends Activity {
 
+    @NotEmpty(messageId = R.string.validation_empty)
     private EditText aText;
+    @NotEmpty(messageId = R.string.validation_empty)
     private EditText bText;
+    @NotEmpty(messageId = R.string.validation_empty)
     private EditText cText;
     private Button submit;
     private TextView result1Text;

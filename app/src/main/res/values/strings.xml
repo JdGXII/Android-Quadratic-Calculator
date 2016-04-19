@@ -33,4 +33,7 @@
         <item>Show all</item>
     </string-array>
 
+    <string name="validation_empty">Can\'t be empty.</string>
+    <string name="validation_number">Input a valid number</string>
+
 </resources>
