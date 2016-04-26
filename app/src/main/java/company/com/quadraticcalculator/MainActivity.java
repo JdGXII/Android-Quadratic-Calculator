@@ -19,15 +19,19 @@ import android.widget.ToggleButton;
 
 import eu.inmite.android.lib.validations.form.FormValidator;
 import eu.inmite.android.lib.validations.form.annotations.NotEmpty;
+import eu.inmite.android.lib.validations.form.annotations.RegExp;
 import eu.inmite.android.lib.validations.form.callback.SimpleErrorPopupCallback;
 
 public class MainActivity extends Activity {
 
     @NotEmpty(messageId = R.string.validation_empty)
+    @RegExp(value = "^-?[0-9]+$", messageId = R.string.validation_number)
     private EditText aText;
     @NotEmpty(messageId = R.string.validation_empty)
+    @RegExp(value = "^-?[0-9]+$", messageId = R.string.validation_number)
     private EditText bText;
     @NotEmpty(messageId = R.string.validation_empty)
+    @RegExp(value = "^-?[0-9]+$", messageId = R.string.validation_number)
     private EditText cText;
     private Button submit;
     private TextView result1Text;
