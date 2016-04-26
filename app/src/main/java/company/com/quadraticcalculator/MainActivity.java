@@ -1,6 +1,7 @@
 package company.com.quadraticcalculator;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,7 +17,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import eu.inmite.android.lib.validations.form.FormValidator;
 import eu.inmite.android.lib.validations.form.annotations.NotEmpty;
+import eu.inmite.android.lib.validations.form.callback.SimpleErrorPopupCallback;
 
 public class MainActivity extends Activity {
 
@@ -40,10 +43,12 @@ public class MainActivity extends Activity {
     private double result1=0; private double result2=0;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         ToggleButton tb;
         tb = (ToggleButton)findViewById(R.id.sessionDataToggle);
 
@@ -84,10 +89,13 @@ public class MainActivity extends Activity {
 
 
         submit.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View v) {
 
-                String translation1 = "";
+                if (validate()){
+                    String translation1 = "";
                 String translation2 = "";
                 a = Double.parseDouble(aText.getText().toString());
                 b = Double.parseDouble(bText.getText().toString());
@@ -96,16 +104,15 @@ public class MainActivity extends Activity {
                 result2 = (-b - (Math.sqrt((b * b) - (4 * a * c)))) / (2 * a);
                 boolean flag1 = Double.isNaN(result1);
                 boolean flag2 = Double.isNaN(result2);
-                String format = "%."+decimal_place+"f";
+                String format = "%." + decimal_place + "f";
                 if (!flag1) {
 
 
-                    if(decimal_place.equals("") || decimal_place.equals("Show all")){
+                    if (decimal_place.equals("") || decimal_place.equals("Show all")) {
 
                         translation1 = Double.toString(result1);
 
-                    }
-                    else{
+                    } else {
 
 
                         translation1 = String.format(format, result1);
@@ -117,12 +124,11 @@ public class MainActivity extends Activity {
 
                 if (!flag2) {
 
-                    if(decimal_place.equals("") || decimal_place.equals("Show all")){
+                    if (decimal_place.equals("") || decimal_place.equals("Show all")) {
 
                         translation2 = Double.toString(result2);
 
-                    }
-                    else{
+                    } else {
 
                         translation2 = String.format(format, result2);
                     }
@@ -144,7 +150,12 @@ public class MainActivity extends Activity {
 
 
             }
+        }
+
+
+
         });
+
 
 
 
@@ -241,10 +252,16 @@ public class MainActivity extends Activity {
                 MODE_PRIVATE);
 
 
-            aText.setText(prefState.getString(getPackageName()+".aText",""));
-            bText.setText(prefState.getString(getPackageName()+".bText",""));
-            cText.setText(prefState.getString(getPackageName()+".cText",""));
+            aText.setText(prefState.getString(getPackageName() + ".aText", ""));
+            bText.setText(prefState.getString(getPackageName() + ".bText", ""));
+            cText.setText(prefState.getString(getPackageName() + ".cText", ""));
 
+
+    }
+
+    private boolean validate(){
+
+        return FormValidator.validate(this, new SimpleErrorPopupCallback(this, true));
 
     }
 }
